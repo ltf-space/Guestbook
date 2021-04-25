@@ -48,4 +48,19 @@ const newSchema = new Schema({
     default:0
   }
 })
-module.exports = mongoose.model('User',newSchema)
+const newCom = new Schema({
+  name:{
+    type:String,
+    required:true
+  },
+  message:{
+    type:String,
+    default:''
+  }
+})
+
+// 登录表
+let users = mongoose.model('User',newSchema)
+// 评论表
+let comments = mongoose.model('Comment',newCom)
+module.exports= {users,comments}

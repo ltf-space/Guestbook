@@ -24,8 +24,8 @@
   </div>
   <div class="comments container">
     <ul class="list-group">
-      {{each comments}}
-      <li class="list-group-item">{{$value.nickname}} : {{$value.message}}
+      {{each arr}}
+      <li class="list-group-item">{{$value.name}} : {{$value.message}}
       </li>
       {{/each}}
     </ul>

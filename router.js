@@ -3,15 +3,15 @@ const { request, response } = require('express')
 const express = require('express')
 const { data } = require('jquery')
 const router = express.Router()
-let user = require('./models/user')
+let {users,comments} = require('./models/user')
 
-// user.find().then(res => {
+// comments.find().then(res => {
 //   console.log(res)
 // }).catch(err => {
 //   console.log(err)
 // })
-// user.deleteMany({
-//   nickname:'werv'
+// comments.deleteMany({
+//   name:'sdf'
 // }).then( () => {
 //   console.log('删除成功')
 // }).catch(err => {
@@ -22,7 +22,7 @@ let user = require('./models/user')
 router.get('/',(request,response) => {//渲染首页
   response.render('index.html',{
     user:request.session.user,//展示当前用户
-    comments:comments
+    arr:arr
   })
 })
 router.get('/login',(request,response) => {//渲染登录页
@@ -31,7 +31,7 @@ router.get('/login',(request,response) => {//渲染登录页
 router.post('/login',(request,response) => {//登录请求
   // console.log(request.body)
   let body = request.body
-  user.findOne({
+  users.findOne({
     email:body.email,
     password:body.password
   }).then(res => {
@@ -60,7 +60,7 @@ router.get('/register',(request,response) => {//渲染注册页
 router.post('/register',(request,response) => {//注册请求
   let body = request.body
   // console.log(body)
-  user.findOne({
+  users.findOne({
     // 判断邮箱或者昵称是否存在
     $or:[
       {
@@ -78,7 +78,7 @@ router.post('/register',(request,response) => {//注册请求
       })
     }
     // 否则向数据库中插入数据
-    new user(body).save().then(res => {
+    new users(body).save().then(res => {
       // console.log(res)
       // 将用户信息保存到session的user中（保存登录状态）
       request.session.user = res
@@ -113,44 +113,48 @@ router.get('/post',(request,response) => {//渲染发表留言页面
   response.render('login.html')
 })
 
-let comments = [
-  {
-    nickname: '李四',
-    message: 'nice to meet you'
-  },
-  {
-    nickname: '李四',
-    message: 'nice to meet you'
-  }
-]
+
+let arr = []
 router.post('/addMeg',(request,response) => {
   // console.log(request.body)
-  comments.unshift(request.body)
-  response.redirect('/')
-  // new user(request.body).save().then(res => {
-  //   return response.status(200)
-  // }).catch(err => {
-  //   console.log(err)
-  // })
+  let body = request.body
+  if(!body){
+    return response.status(500)
+  }
+  new comments(request.body).save().then(res => {
+    console.log(res)
+    return response.status(200)
+  }).catch(err => {
+    console.log(err)
+  })
+ 
+  comments.find().then(res => {
+    arr.unshift(res)  
+    // console.log(arr)
+    response.redirect('/')
+    return arr
+  })
+
+  
 })
 
 // 利用async await 方法
 // router.post('/register',async (request,response) => {//注册请求
 //   let body = request.body
 //   try{
-//     if(await user.findOne({ email:body.email })){
+//     if(await users.findOne({ email:body.email })){
 //       return response.status(200).json({
 //         err_code:1,
 //         message:'邮箱已存在'
 //       })
 //     }
-//     if(await user.findOne({ nickname:body.nickname })){
+//     if(await users.findOne({ nickname:body.nickname })){
 //       return response.status(200).json({
 //         err_code:2,
 //         message:'昵称已存在'
 //       })
 //     }
-//     await new user(body).save()
+//     await new users(body).save()
 //     response.status(200).json({
 //       err_code:0,
 //       message:'成功'
