@@ -107,7 +107,10 @@ router.get('/goOut',(request,response) => {//退出登录
   response.redirect('/')
 })
 router.get('/post',(request,response) => {//渲染发表留言页面
-  response.render('post.html')
+  if(request.session.user){
+    response.render('post.html')
+  }
+  response.render('login.html')
 })
 
 let comments = [
@@ -121,7 +124,7 @@ let comments = [
   }
 ]
 router.post('/addMeg',(request,response) => {
-  console.log(request.body)
+  // console.log(request.body)
   comments.unshift(request.body)
   response.redirect('/')
   // new user(request.body).save().then(res => {
