@@ -10,9 +10,7 @@ let {users,comments} = require('./models/user')
 // }).catch(err => {
 //   console.log(err)
 // })
-// comments.deleteMany({
-//   name:'sdf'
-// }).then( () => {
+// comments.deleteMany().then( () => {
 //   console.log('删除成功')
 // }).catch(err => {
 //   console.log(err)
@@ -122,7 +120,7 @@ router.post('/addMeg',(request,response) => {
     return response.status(500)
   }
   new comments(request.body).save().then(res => {
-    console.log(res)
+    // console.log(res)
     arr.unshift(res)  
     response.redirect('/')
     return arr
