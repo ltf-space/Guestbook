@@ -123,17 +123,20 @@ router.post('/addMeg',(request,response) => {
   }
   new comments(request.body).save().then(res => {
     console.log(res)
-    return response.status(200)
+    arr.unshift(res)  
+    response.redirect('/')
+    return arr
+    // return response.status(200)
   }).catch(err => {
     console.log(err)
   })
  
-  comments.find().then(res => {
-    arr.unshift(res)  
-    // console.log(arr)
-    response.redirect('/')
-    return arr
-  })
+  // comments.find().then(res => {
+  //   arr.unshift(res)  
+  //   // console.log(arr)
+  //   response.redirect('/')
+  //   return arr
+  // })
 
   
 })
